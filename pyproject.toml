@@ -12,9 +12,11 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[project.urls]
+Repository = "https://github.com/lebao-arch/comfyui-h3-audio-drive-auto"
+
 [tool.comfy]
 PublisherId = "lebao-arch"
-Repository = "https://github.com/lebao-arch/comfyui-h3-audio-drive-auto"
 DisplayName = "H3 Audio Drive Auto"
 Icon = ""
 BannerUrl = ""
