@@ -138,8 +138,10 @@ def _mouth_curves(frames, box):
         y0, y1 = int(0.55 * h), int(0.95 * h)
     else:
         bx, by, bw, bh = [float(v) for v in box]
-        x0 = int(bx + 0.22 * bw); x1 = int(bx + 0.78 * bw)
-        y0 = int(by + 0.60 * bh); y1 = int(by + 0.95 * bh)
+        x0 = int(bx + 0.22 * bw)
+        x1 = int(bx + 0.78 * bw)
+        y0 = int(by + 0.60 * bh)
+        y1 = int(by + 0.95 * bh)
     x0, x1 = max(0, min(x0, w - 2)), max(1, min(x1, w))
     y0, y1 = max(0, min(y0, h - 2)), max(1, min(y1, h))
     if x1 - x0 < 4 or y1 - y0 < 4:
