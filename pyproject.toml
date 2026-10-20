@@ -13,7 +13,7 @@ classifiers = [
 ]
 
 [tool.comfy]
-PublisherId = "your-publisher-id"
+PublisherId = "lebao-arch"
 DisplayName = "H3 Audio Drive Auto"
 Icon = ""
 BannerUrl = ""
