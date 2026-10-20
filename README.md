@@ -13,6 +13,13 @@ whole length - graft the driven performance onto the stable render in one node.
 | `H3LipSyncScore` | offline check: does the mouth track this audio, and by how many frames is it offset |
 | `H3LipSyncTransfer` | source render (stable face) + driving render (tracking mouth) -> LivePortrait expression transfer, one node |
 
+![demo](docs/demo.gif)
+
+*10.3 s, 248 frames, one H3 pass per style plus one transfer pass: the face stays
+the same person and the mouth tracks the track (H3LipSyncScore 0.352 / 0.340,
+offset -2 / +0). Left/right below is the same frame of the stable render and of
+the transferred one.*
+
 Quick start: [`examples/minimal_api.json`](examples/minimal_api.json) is a 16-node
 graph that runs end to end (verified: 124 frames, 5.17 s, scored 0.515 with a
 -10 frame lead). Point node `5` at your wav, node `1`-`4` at your H3 checkpoints,
