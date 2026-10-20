@@ -192,8 +192,8 @@ class H3AudioDriveLong:
 
     def render(self, model, clip, video_vae, audio_vae, audio, prompt, width, height,
                max_window_seconds, steps, sampler_name, scheduler, seed,
-               seam_fade_frames, max_windows, chain_frames=True, first_frame=None,
-               ref_image=None):
+               seam_fade_frames, max_windows, chain_frames=True, audio_offset_frames=0,
+               first_frame=None, ref_image=None):
         w, sr = _waveform(audio)
         duration = w.shape[-1] / float(sr)
         plan, total_frames = self._plan(duration, max_window_seconds, max_windows)
