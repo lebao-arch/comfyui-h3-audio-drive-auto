@@ -12,6 +12,7 @@ whole length - graft the driven performance onto the stable render in one node.
 | `H3AudioDriveLong` | any length of audio, one node: legal windows, per-window sampling, chained first frames, original audio out |
 | `H3LipSyncScore` | offline check: does the mouth track this audio, and by how many frames is it offset |
 | `H3LipSyncTransfer` | source render (stable face) + driving render (tracking mouth) -> LivePortrait expression transfer, one node |
+| `H3LipSyncWav2Lip` | phoneme-level mouth re-synthesis from the audio (Wav2Lip), identity untouched |
 
 ![demo](docs/demo.gif)
 
@@ -271,12 +272,60 @@ clear the GOOD threshold, and an independent frame-difference estimator agrees a
 +1 frame. Cost: roughly 2-3 minutes for a 10 s shot, plus temp disk for the two
 mp4s.
 
+## H3LipSyncWav2Lip - phoneme-level mouth, on top of any frames
+
+The in-model route cannot hold one face *and* follow the soundtrack; expression
+transfer only copies motion that already exists. Wav2Lip instead rewrites the
+mouth from the audio itself, frame by frame, and leaves every other pixel alone -
+so the face stays exactly the person you rendered and the lips land on the
+phonemes.
+
+```
+ANY frames (or H3AudioDriveLong output) -> images
+ANY AUDIO                              -> audio
+                                          H3LipSyncWav2Lip -> frames, audio, report
+                                          frames -> CreateVideo, audio -> CreateVideo.audio
+```
+
+It writes the frames to a temporary mp4, runs your local Wav2Lip checkout
+(`inference.py --checkpoint_path ... --face ... --audio ... --outfile ... --pads
+... --resize_factor ...`), reads the result back, and returns it 1:1 with the
+input length. Everything runs in a subprocess, so ComfyUI never imports Wav2Lip's
+old dependencies.
+
+Measured on the same 10.33 s / 248-frame shot (auto ROI, 24 fps; higher is better,
+GOOD >= 0.18):
+
+| output | window 1 | window 2 | whole clip |
+|---|---|---|---|
+| chained H3 only | 0.278 | 0.000 | 0.221 |
+| LivePortrait transfer | 0.352 | 0.340 | - |
+| **Wav2Lip (this node)** | 0.292 | **0.359** | **0.228** |
+
+Window 2 - the one H3 cannot drive at all - is the best of the three. Cost: about
+2.5 minutes for a 10 s / 864x480 shot on a 3090 Ti, no extra VRAM beyond the
+Wav2Lip model itself (36M parameters).
+
+Notes that matter in practice:
+
+- **Resolution**: the mouth is synthesised at 96x96 and pasted back, so close-ups
+  look slightly soft. `wav2lip_gan.pth` is sharper; `wav2lip.pth` has marginally
+  tighter lipsync.
+- **Length**: Wav2Lip follows the audio, so a soundtrack longer than the picture
+  yields fewer frames - the node trims or repeats the last frame to keep the graph
+  in lockstep with the source frames and says so in `report`.
+- **`audio_offset_frames`** here shifts only the muxed track (the mouth was already
+  synthesised against the original audio); this is deliberate, otherwise the lips
+  and the sound would move together and the knob would do nothing.
+- **Licence**: Wav2Lip is trained on LRS2 and its authors forbid commercial use.
+  Research / personal projects only unless you license it (Sync Labs) - this is
+  why the node ships with a path setting instead of bundling the weights.
+
 ## Notes
 
 - `lock_source` still leaves the model in charge of *how* the mouth performs; H3
-  is not a phoneme-level lip-sync model. For frame-exact dubbing you still need a
-  post-hoc lip-sync model (LatentSync / Wav2Lip / MuseTalk) — none of which are
-  bundled with this pack.
+  is not a phoneme-level lip-sync model. For frame-exact dubbing use
+  `H3LipSyncWav2Lip` (needs the external checkpoint) or another post-hoc model.
 - Audio longer than ~15 s should be rendered as windows; `H3AudioDriveLong` does
   that for you and returns a length-matched track for the mux.
 
