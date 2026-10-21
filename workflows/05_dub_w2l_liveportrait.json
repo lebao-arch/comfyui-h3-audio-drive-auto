@@ -1,0 +1,958 @@
+{
+  "id": "c160d8ef-cf22-4d89-a04f-f4ed61603d9a",
+  "revision": 0,
+  "last_node_id": 7,
+  "last_link_id": 10,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "VHS_LoadVideoPath",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        238.14453125,
+        286
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "meta_batch",
+          "name": "meta_batch",
+          "shape": 7,
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "localized_name": "video",
+          "name": "video",
+          "type": "STRING",
+          "widget": {
+            "name": "video"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "force_rate",
+          "name": "force_rate",
+          "type": "FLOAT",
+          "widget": {
+            "name": "force_rate"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "custom_width",
+          "name": "custom_width",
+          "type": "INT",
+          "widget": {
+            "name": "custom_width"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "custom_height",
+          "name": "custom_height",
+          "type": "INT",
+          "widget": {
+            "name": "custom_height"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "frame_load_cap",
+          "name": "frame_load_cap",
+          "type": "INT",
+          "widget": {
+            "name": "frame_load_cap"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "skip_first_frames",
+          "name": "skip_first_frames",
+          "type": "INT",
+          "widget": {
+            "name": "skip_first_frames"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "select_every_nth",
+          "name": "select_every_nth",
+          "type": "INT",
+          "widget": {
+            "name": "select_every_nth"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "format",
+          "name": "format",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "format"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1,
+            3
+          ]
+        },
+        {
+          "localized_name": "frame_count",
+          "name": "frame_count",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "localized_name": "video_info",
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-workflow-encrypt",
+        "ver": "1.0.0",
+        "Node name for S&R": "VHS_LoadVideoPath"
+      },
+      "widgets_values": {
+        "video": "G:/ComfyUI-aki-v3.2/ComfyUI-aki-v3.2/ComfyUI/output/video/H3_LONGDRIVE_TEST_00001-audio.mp4",
+        "force_rate": 0,
+        "custom_width": 0,
+        "custom_height": 0,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "format": "AnimateDiff",
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "",
+            "type": "path",
+            "format": "video/",
+            "force_rate": 0,
+            "custom_width": 0,
+            "custom_height": 0,
+            "frame_load_cap": 0,
+            "skip_first_frames": 0,
+            "select_every_nth": 1
+          }
+        }
+      },
+      "widgets_values_named": {
+        "video": "G:/ComfyUI-aki-v3.2/ComfyUI-aki-v3.2/ComfyUI/output/video/H3_LONGDRIVE_TEST_00001-audio.mp4",
+        "force_rate": 0,
+        "custom_width": 0,
+        "custom_height": 0,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "format": "AnimateDiff",
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "",
+            "type": "path",
+            "format": "video/",
+            "force_rate": 0,
+            "custom_width": 0,
+            "custom_height": 0,
+            "frame_load_cap": 0,
+            "skip_first_frames": 0,
+            "select_every_nth": 1
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": "LoadAudio",
+      "pos": [
+        0,
+        470
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "音频",
+          "name": "audio",
+          "type": "COMBO",
+          "widget": {
+            "name": "audio"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "音频UI",
+          "name": "audioUI",
+          "type": "AUDIO_UI",
+          "widget": {
+            "name": "audioUI"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选择文件上传",
+          "name": "upload",
+          "type": "AUDIOUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "音频",
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            2,
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.42.0",
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "ref_speech_test.wav",
+        ""
+      ],
+      "widgets_values_named": {
+        "audio": "ref_speech_test.wav",
+        "upload": ""
+      }
+    },
+    {
+      "id": 3,
+      "type": "H3LipSyncWav2Lip",
+      "pos": [
+        400,
+        0
+      ],
+      "size": [
+        399.6421875,
+        290
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 2
+        },
+        {
+          "localized_name": "fps",
+          "name": "fps",
+          "type": "FLOAT",
+          "widget": {
+            "name": "fps"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "checkpoint",
+          "name": "checkpoint",
+          "type": "COMBO",
+          "widget": {
+            "name": "checkpoint"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "pads",
+          "name": "pads",
+          "type": "STRING",
+          "widget": {
+            "name": "pads"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "resize_factor",
+          "name": "resize_factor",
+          "type": "INT",
+          "widget": {
+            "name": "resize_factor"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "nosmooth",
+          "name": "nosmooth",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "nosmooth"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "audio_offset_frames",
+          "name": "audio_offset_frames",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "audio_offset_frames"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "python_exe",
+          "name": "python_exe",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "python_exe"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "wav2lip_dir",
+          "name": "wav2lip_dir",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "wav2lip_dir"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "ffmpeg_dir",
+          "name": "ffmpeg_dir",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "ffmpeg_dir"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "frames",
+          "name": "frames",
+          "type": "IMAGE",
+          "links": [
+            4
+          ]
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "localized_name": "report",
+          "name": "report",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-workflow-encrypt",
+        "ver": "1.0.0",
+        "Node name for S&R": "H3LipSyncWav2Lip"
+      },
+      "widgets_values": [
+        24,
+        "wav2lip_gan.pth",
+        "0 10 0 0",
+        1,
+        false,
+        0,
+        "G:\\lipsync-tools\\venv-latentsync\\Scripts\\python.exe",
+        "G:\\lipsync-tools\\Wav2Lip",
+        "F:\\ffmpeg\\ffmpeg-8.0.1-essentials_build\\bin"
+      ],
+      "widgets_values_named": {
+        "fps": 24,
+        "checkpoint": "wav2lip_gan.pth",
+        "pads": "0 10 0 0",
+        "resize_factor": 1,
+        "nosmooth": false,
+        "audio_offset_frames": 0,
+        "python_exe": "G:\\lipsync-tools\\venv-latentsync\\Scripts\\python.exe",
+        "wav2lip_dir": "G:\\lipsync-tools\\Wav2Lip",
+        "ffmpeg_dir": "F:\\ffmpeg\\ffmpeg-8.0.1-essentials_build\\bin"
+      }
+    },
+    {
+      "id": 4,
+      "type": "H3LipSyncTransfer",
+      "pos": [
+        820,
+        0
+      ],
+      "size": [
+        430.3697265625,
+        218
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source_images",
+          "name": "source_images",
+          "type": "IMAGE",
+          "link": 3
+        },
+        {
+          "localized_name": "driving_images",
+          "name": "driving_images",
+          "type": "IMAGE",
+          "link": 4
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 5
+        },
+        {
+          "localized_name": "fps",
+          "name": "fps",
+          "type": "FLOAT",
+          "widget": {
+            "name": "fps"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "animation_region",
+          "name": "animation_region",
+          "type": "COMBO",
+          "widget": {
+            "name": "animation_region"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "driving_multiplier",
+          "name": "driving_multiplier",
+          "type": "FLOAT",
+          "widget": {
+            "name": "driving_multiplier"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "audio_offset_frames",
+          "name": "audio_offset_frames",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "audio_offset_frames"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "python_exe",
+          "name": "python_exe",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "python_exe"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "liveportrait_dir",
+          "name": "liveportrait_dir",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "liveportrait_dir"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "frames",
+          "name": "frames",
+          "type": "IMAGE",
+          "links": [
+            6,
+            8
+          ]
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            7,
+            9
+          ]
+        },
+        {
+          "localized_name": "report",
+          "name": "report",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-workflow-encrypt",
+        "ver": "1.0.0",
+        "Node name for S&R": "H3LipSyncTransfer"
+      },
+      "widgets_values": [
+        24,
+        "all",
+        1,
+        0,
+        "G:\\ComfyUI-aki-v3.2\\ComfyUI-aki-v3.2\\python\\python.exe",
+        "G:\\lipsync-tools\\LivePortrait"
+      ],
+      "widgets_values_named": {
+        "fps": 24,
+        "animation_region": "all",
+        "driving_multiplier": 1,
+        "audio_offset_frames": 0,
+        "python_exe": "G:\\ComfyUI-aki-v3.2\\ComfyUI-aki-v3.2\\python\\python.exe",
+        "liveportrait_dir": "G:\\lipsync-tools\\LivePortrait"
+      }
+    },
+    {
+      "id": 5,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        1240,
+        0
+      ],
+      "size": [
+        220.7333984375,
+        238
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 6
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 7
+        },
+        {
+          "localized_name": "meta_batch",
+          "name": "meta_batch",
+          "shape": 7,
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "localized_name": "frame_rate",
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "widget": {
+            "name": "frame_rate"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "loop_count",
+          "name": "loop_count",
+          "type": "INT",
+          "widget": {
+            "name": "loop_count"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "format",
+          "name": "format",
+          "type": "COMBO",
+          "widget": {
+            "name": "format"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "pingpong",
+          "name": "pingpong",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "pingpong"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "save_output",
+          "name": "save_output",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "save_output"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "Filenames",
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-workflow-encrypt",
+        "ver": "1.0.0",
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "video/H3_DUB_LP_UI",
+        "format": "video/h264-mp4",
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {}
+        }
+      },
+      "widgets_values_named": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "video/H3_DUB_LP_UI",
+        "format": "video/h264-mp4",
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {}
+        }
+      }
+    },
+    {
+      "id": 6,
+      "type": "H3LipSyncScore",
+      "pos": [
+        1240,
+        330
+      ],
+      "size": [
+        277.6001953125,
+        190
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 8
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 9
+        },
+        {
+          "localized_name": "fps",
+          "name": "fps",
+          "type": "FLOAT",
+          "widget": {
+            "name": "fps"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "roi_mode",
+          "name": "roi_mode",
+          "type": "COMBO",
+          "widget": {
+            "name": "roi_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_lag_frames",
+          "name": "max_lag_frames",
+          "type": "INT",
+          "widget": {
+            "name": "max_lag_frames"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "plot",
+          "name": "plot",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "plot"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "score",
+          "name": "score",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "localized_name": "offset_frames",
+          "name": "offset_frames",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "localized_name": "report",
+          "name": "report",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "plot",
+          "name": "plot",
+          "type": "IMAGE",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-workflow-encrypt",
+        "ver": "1.0.0",
+        "Node name for S&R": "H3LipSyncScore"
+      },
+      "widgets_values": [
+        24,
+        "auto",
+        12,
+        true
+      ],
+      "widgets_values_named": {
+        "fps": 24,
+        "roi_mode": "auto",
+        "max_lag_frames": 12,
+        "plot": true
+      }
+    },
+    {
+      "id": 7,
+      "type": "SaveImage",
+      "pos": [
+        1600,
+        330
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "图片",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 10
+        },
+        {
+          "localized_name": "文件名前缀",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.42.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "h3_lipsync_dub_lp_ui"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "h3_lipsync_dub_lp_ui"
+      }
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      2,
+      0,
+      3,
+      1,
+      "AUDIO"
+    ],
+    [
+      3,
+      1,
+      0,
+      4,
+      0,
+      "IMAGE"
+    ],
+    [
+      4,
+      3,
+      0,
+      4,
+      1,
+      "IMAGE"
+    ],
+    [
+      5,
+      2,
+      0,
+      4,
+      2,
+      "AUDIO"
+    ],
+    [
+      6,
+      4,
+      0,
+      5,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      4,
+      1,
+      5,
+      1,
+      "AUDIO"
+    ],
+    [
+      8,
+      4,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      9,
+      4,
+      1,
+      6,
+      1,
+      "AUDIO"
+    ],
+    [
+      10,
+      6,
+      3,
+      7,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.9090909090909091,
+      "offset": [
+        327.8479214898228,
+        220.04550257038193
+      ]
+    }
+  },
+  "version": 0.4
+}

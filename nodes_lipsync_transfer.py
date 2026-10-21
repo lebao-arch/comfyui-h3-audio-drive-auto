@@ -11,6 +11,7 @@ package dependency-free and keeps the ComfyUI process out of its CUDA lifetime.
 """
 
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -22,6 +23,46 @@ from .nodes_audio_drive import H3_FPS, _shift_audio
 
 DEFAULT_PYTHON = r"G:\ComfyUI-aki-v3.2\ComfyUI-aki-v3.2\python\python.exe"
 DEFAULT_REPO = r"G:\lipsync-tools\LivePortrait"
+
+
+def _cuda_dll_dirs():
+    """Directories that hold cublasLt/cudnn DLLs for onnxruntime's CUDA provider.
+
+    onnxruntime (1.23) links cublasLt64_12.dll while torch 2.13 ships CUDA 13, so
+    torch/lib alone is not enough: with a bare subprocess env the provider dies
+    with "Error 126" before any inference runs. Give it the CUDA 12 toolkit bins
+    first, then whatever torch/nvidia wheels provide, so the import order is
+    deterministic instead of depending on whoever launched ComfyUI.
+    """
+    out = []
+    seen = set()
+
+    def add(p):
+        if p and p not in seen and os.path.isdir(p):
+            seen.add(p)
+            out.append(p)
+
+    for root in (os.environ.get("CUDA_PATH"),
+                 r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA"):
+        if root and os.path.isdir(root):
+            if os.path.basename(root.rstrip("\\")).lower().startswith("v1"):
+                add(os.path.join(root, "bin"))
+            else:
+                for name in sorted(os.listdir(root), reverse=True):
+                    if re.match(r"v12\.", name, re.I):
+                        add(os.path.join(root, name, "bin"))
+    try:
+        import torch
+
+        torch_dir = os.path.dirname(os.path.abspath(torch.__file__))
+        add(os.path.join(torch_dir, "lib"))
+        nvidia = os.path.join(os.path.dirname(torch_dir), "nvidia")
+        if os.path.isdir(nvidia):
+            for pkg in sorted(os.listdir(nvidia)):
+                add(os.path.join(nvidia, pkg, "bin"))
+    except Exception:
+        pass
+    return out
 
 
 def _frames_to_uint8(images):
@@ -159,6 +200,11 @@ class H3LipSyncTransfer:
                    "--driving_multiplier", "%.3f" % driving_multiplier]
             env = dict(os.environ)
             env.setdefault("PYTHONIOENCODING", "utf-8")
+            # onnxruntime's CUDA provider needs cublasLt/cudnn, which ship inside the
+            # torch wheel. ComfyUI's process PATH does not include that directory, so a
+            # bare subprocess dies with "cublasLt64_12.dll is missing" (Error 126).
+            for extra in _cuda_dll_dirs():
+                env["PATH"] = extra + os.pathsep + env.get("PATH", "")
             proc = subprocess.run(cmd, cwd=liveportrait_dir, capture_output=True,
                                   text=True, encoding="utf-8", errors="replace",
                                   env=env, timeout=3600)
