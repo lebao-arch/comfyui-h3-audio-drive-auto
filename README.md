@@ -86,11 +86,18 @@ that is exactly as long as the video.
 | `model`/`clip`/`video_vae`/`audio_vae` | the usual H3 loaders |
 | `audio`, `prompt`, `width`, `height` | what to render |
 | `max_window_seconds` | window size ceiling; snapped down to the `17k+5` grid (5.0 s → 124 frames) |
+| `max_windows` | `0` = automatic (as many windows as the audio needs). A positive value is a safety cap: the node then refuses with the exact window count you need instead of truncating your audio. |
 | `chain_frames` | anchor each window on the previous last frame (see the measured limit below) |
 | `ref_image` *(optional)* | identity reference for the text encoder |
 | `first_frame` *(optional)* | anchor for window 1 only |
 
 Returns `frames, audio, frames_total, report`.
+
+Longer tracks cost linearly. Measured on a 27.19 s MP3 (`max_windows=0`, 5.0 s
+windows, 864x480, 12 steps): 6 windows, **659 frames = 27.458 s**, ~13 min wall
+clock, one `H3_LONG_UI_*.mp4`. Above `max_windows=0` is safe up to roughly 55
+windows (~4.8 min) at 864x480; past that the frames alone stop fitting in RAM and
+the node says so before it starts sampling, with the chunk length to use instead.
 
 Measured on a 10.12 s track → 2 windows → 248 frames (10.3333 s):
 

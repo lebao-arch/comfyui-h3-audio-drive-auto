@@ -136,7 +136,12 @@ class H3AudioDriveLong:
                                "(measured 0.00 vs 0.55 unchained). Off = lips track, subject may "
                                "walk away from you.",
                 }),
-                "max_windows": ("INT", {"default": 12, "min": 1, "max": 200}),
+                "max_windows": ("INT", {
+                    "default": 0, "min": 0, "max": 200,
+                    "tooltip": "0 = automatic: use as many windows as the audio needs. A positive "
+                               "value is a safety cap; the node refuses (with the exact window "
+                               "count you need) instead of silently truncating your audio.",
+                }),
                 "audio_offset_frames": ("INT", {
                     "default": 0, "min": -48, "max": 48, "step": 1,
                     "tooltip": "Shift the RETURNED audio against the rendered frames, in frames at "
@@ -167,7 +172,7 @@ class H3AudioDriveLong:
     )
 
     # ------------------------------------------------------------------
-    def _plan(self, duration, max_window_seconds, max_windows):
+    def _plan(self, duration, max_window_seconds, max_windows, width=864, height=480):
         win_frames = align_frame_count(int(round(max_window_seconds * H3_FPS)))
         win_frames = max(5, win_frames)
         win_seconds = win_frames / H3_FPS
@@ -181,12 +186,35 @@ class H3AudioDriveLong:
             start_f = int(round(t * H3_FPS))
             plan.append((start_f, frames))
             t += frames / H3_FPS
-            if len(plan) > max_windows:
-                raise ValueError(
-                    "H3AudioDriveLong: audio needs more than max_windows=%d windows of %.2fs. "
-                    "Raise max_windows or max_window_seconds." % (max_windows, win_seconds))
         if not plan:
             plan = [(0, 5)]
+        needed = len(plan)
+        auto = max_windows is None or max_windows <= 0
+        limit = needed if auto else max_windows
+        total = sum(f for _, f in plan)
+        # frames are collected as float16 before the final cat(): keep the plan inside a
+        # memory budget instead of failing with a cryptic OOM half an hour in.
+        budget = 16.0 * (1024.0 ** 3)
+        frames_limit = max(win_frames, int(budget / (width * height * 3 * 2)))
+        windows_limit = max(1, frames_limit // win_frames)
+        if total > frames_limit:
+            raise ValueError(
+                "H3AudioDriveLong: %.2fs of audio is %d frames, which is about %.1f GB of "
+                "image data - past the %.0f GB budget for one graph. Split the track into "
+                "chunks of about %.0fs (<= %d windows) and render them separately, or lower "
+                "width/height." % (duration, total, total * width * height * 3 * 2 / (1024.0 ** 3),
+                                   budget / (1024.0 ** 3), windows_limit * win_seconds,
+                                   windows_limit))
+        if needed > limit:
+            gb = total * width * height * 3 * 2 / (1024.0 ** 3)
+            raise ValueError(
+                "H3AudioDriveLong: %.2fs of audio needs %d windows of %.2fs, but "
+                "max_windows=%d only covers %.2fs. Set max_windows to %d (or 0 = "
+                "automatic). Cost grows linearly: %d windows at 864x480 is roughly "
+                "%.0f min here and holds about %.1f GB of image data."
+                % (duration, needed, win_seconds, limit, limit * win_seconds, needed,
+                   needed, needed * 1.15, total, gb))
+        self._last_auto = auto
         total = sum(f for _, f in plan)
         return plan, total
 
@@ -196,7 +224,7 @@ class H3AudioDriveLong:
                first_frame=None, ref_image=None):
         w, sr = _waveform(audio)
         duration = w.shape[-1] / float(sr)
-        plan, total_frames = self._plan(duration, max_window_seconds, max_windows)
+        plan, total_frames = self._plan(duration, max_window_seconds, max_windows, width, height)
         total_seconds = total_frames / H3_FPS
 
         # audio for the mux: exactly as long as the frames we will produce
@@ -212,9 +240,10 @@ class H3AudioDriveLong:
         lines = [
             "H3 Audio Drive Long",
             "audio        : %.2fs @ %d Hz" % (duration, sr),
-            "windows      : %d x <= %.2fs  (total %d frames = %.3fs)"
+            "windows      : %d x <= %.2fs  (total %d frames = %.3fs%s)"
             % (len(plan), align_frame_count(int(round(max_window_seconds * H3_FPS))) / H3_FPS,
-               total_frames, total_seconds),
+               total_frames, total_seconds,
+               ", max_windows=auto" if getattr(self, "_last_auto", False) else ""),
             "sampling     : %d steps, %s / %s, seed %d" % (steps, sampler_name, scheduler, seed),
         ]
 

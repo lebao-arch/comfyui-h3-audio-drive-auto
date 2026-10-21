@@ -285,11 +285,11 @@
         "Node name for S&R": "LoadAudio"
       },
       "widgets_values": [
-        "ref_speech_test.wav",
+        "2月6日.MP3",
         ""
       ],
       "widgets_values_named": {
-        "audio": "ref_speech_test.wav",
+        "audio": "2月6日.MP3",
         "upload": ""
       }
     },
@@ -510,7 +510,7 @@
         "randomize",
         4,
         true,
-        4,
+        0,
         -10
       ],
       "widgets_values_named": {
@@ -525,7 +525,7 @@
         "control_after_generate": "randomize",
         "seam_fade_frames": 4,
         "chain_frames": true,
-        "max_windows": 4,
+        "max_windows": 0,
         "audio_offset_frames": -10
       }
     },

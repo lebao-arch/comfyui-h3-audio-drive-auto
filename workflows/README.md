@@ -10,8 +10,15 @@ are measured, not estimated.
 | file | nodes | what it does | time (3090 Ti, 864x480) |
 |---|---|---|---|
 | `01_quick_audio_drive.json` | 18 | one 5.2 s shot, audio locked into the AV latent, video + lip-sync plot | 117 s |
-| `02_long_any_length.json` | 9 | the whole 10.1 s track as two windows, muxed, scored, saved | 249 s |
+| `02_long_any_length.json` | 9 | any track, `max_windows=0`, muxed, scored, saved | 27.19 s audio → 6 windows, 659 frames, **~13 min** |
 | `03_identity_transfer.json` | 11 | chained take + unchained take → LivePortrait transfer, 248 frames | 156 s |
+
+`02` ships with `max_windows = 0` (automatic) so it accepts any audio file; a
+positive value is only a safety cap. If you set a cap that is too small the node
+stops with the exact number of windows your track needs, e.g.
+`27.19s of audio needs 6 windows of 5.17s, but max_windows=4 only covers 20.67s`.
+The same guard refuses tracks that would exceed ~16 GB of frames and tells you
+what chunk length to render instead.
 
 ## 01 — quick audio drive
 
@@ -47,7 +54,13 @@ drift (`lag = 0 windows of 20 ms, r = 1.000` measured).
 
 `chain_frames = true` keeps the subject stable across seams; window 2+ then
 stops following its own audio (measured 0.00 vs 0.55 unchained) — that is what
-`03` exists for. `audio_offset_frames = -10` is the measured correction.
+`03` exists for. `audio_offset_frames = -10` is the measured correction for the
+speech track; with the 27.19 s MP3 the plot reported `+8` after that shift, so
+the right value for that track is `-2`.
+
+One caveat on scoring a **music** bed: the scorer correlates picture motion with
+loudness, so a GOOD score on non-speech audio only proves the mouth moves in
+time with the beat, not that it forms phonemes.
 
 ## 03 — identity + lips (the three-step recipe)
 

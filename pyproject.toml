@@ -1,6 +1,6 @@
 [project]
 name = "comfyui-h3-audio-drive-auto"
-version = "1.0.1"
+version = "1.0.2"
 description = "MiniMax H3 audio-driven video: lock audio into the joint AV latent, render any length in one node, score lip sync offline, and transfer a driven mouth onto a stable face."
 license = { file = "LICENSE" }
 readme = "README.md"
