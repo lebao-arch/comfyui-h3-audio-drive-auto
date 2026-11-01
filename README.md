@@ -1,6 +1,6 @@
 # comfyui-h3-audio-drive-auto
 
-Four nodes for **MiniMax H3 audio-driven video**: put your audio *inside* the
+Five nodes for **MiniMax H3 audio-driven video**: put your audio *inside* the
 joint AV latent so the mouth is generated against it, render a track of any
 length by splitting it into windows, prove afterwards that the mouth actually
 moved with that audio, and - when one shot has to keep a single face for its
@@ -86,7 +86,7 @@ that is exactly as long as the video.
 |---|---|
 | `model`/`clip`/`video_vae`/`audio_vae` | the usual H3 loaders |
 | `audio`, `prompt`, `width`, `height` | what to render |
-| `max_window_seconds` | window size ceiling; snapped down to the `17k+5` grid (5.0 s → 124 frames) |
+| `max_window_seconds` | window size ceiling; snapped up to the `17k+5` grid (5.0 s → 124 frames) |
 | `max_windows` | `0` = automatic (as many windows as the audio needs). A positive value is a safety cap: the node then refuses with the exact window count you need instead of truncating your audio. |
 | `chain_frames` | anchor each window on the previous last frame (see the measured limit below) |
 | `ref_image` *(optional)* | identity reference for the text encoder |
@@ -234,7 +234,7 @@ track moves):
 | single window, 124 frames | -4 | -4 | **-1** | -1 |
 | 10.3 s LivePortrait clip | -10 | -10 | **+0** | +1 |
 
-Residual spread across windows is about +-2 frames (window 1 of the long clip
+Residual spread across windows is about ±2 frames (window 1 of the long clip
 settles at -4 while window 2 sits at +1), and the envelope correlation itself is
 weak (r ~ 0.3-0.4), so treat the number as a calibration aid rather than a
 ground truth: check one shot with clear plosives before mastering.
@@ -337,16 +337,16 @@ The package is ready to ship: MIT licence, registry-ready pyproject.toml,
 verified example graph, and every number in this README was measured, not
 estimated. Publishing needs your accounts, so the last mile is manual:
 
-`ash
+```bash
 # 1) repo
-git init && git add . && git commit -m "H3 audio drive: 4 nodes, measured"
+git init && git add . && git commit -m "H3 audio drive: 5 nodes, measured"
 gh auth login                                  # if gh is not authenticated
 gh repo create comfyui-h3-audio-drive-auto --public --source . --push
 
 # 2) ComfyUI Registry (needs PublisherId from registry.comfy.org)
 pip install comfy-cli
 comfy --skip-prompt --here node publish         # reads [tool.comfy] from pyproject.toml
-`
+```
 
 Before publishing, replace PublisherId = "your-publisher-id" in
 pyproject.toml with the id you register at <https://registry.comfy.org>.
